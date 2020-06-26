@@ -3,6 +3,7 @@ import re
 import datetime
 
 import all_flights
+from generate_ticket import generate_ticket
 
 QUANTITY_POSSIBLE_FLIGHTS = 5
 QUANTITY_PLACES = 5
@@ -56,11 +57,14 @@ def handle_date(text, context):
                                   town_departure=context['town_departure'],
                                   town_arrival=context['town_arrival'])
     possible_flights_list = ''
+    context_possible_flights = list()
     for i, flight in enumerate(possible_flights):
-        possible_flights_list += f'{i + 1}. {calendar.day_name[flight.weekday()]}, {flight.strftime(FORMAT_OUT_DATE)}\n'
+        flight_date_time = f'{calendar.day_name[flight.weekday()]}, {flight.strftime(FORMAT_OUT_DATE)}'
+        possible_flights_list += f'{i + 1}. {flight_date_time}\n'
+        context_possible_flights.append(flight_date_time)
 
     context['possible_flights_list'] = possible_flights_list
-    context['possible_flights'] = possible_flights
+    context['possible_flights'] = context_possible_flights
 
     return True
 
@@ -69,7 +73,7 @@ def handle_number_date(text, context):
     match = re.search(re_number_date, text)
     if match:
         selected_flight = context['possible_flights'][int(text) - 1]
-        context['date'] = f'{calendar.day_name[selected_flight.weekday()]}, {selected_flight.strftime(FORMAT_OUT_DATE)}'
+        context['date'] = selected_flight
         return True
     else:
         return False
@@ -165,3 +169,13 @@ def dispatcher(possible_date, town_departure, town_arrival):
     possible_flights = possible_flights[:QUANTITY_POSSIBLE_FLIGHTS]
 
     return possible_flights
+
+
+def handler_generate_ticket(text, context):
+    return generate_ticket(town_departure=context['town_departure'],
+                           town_arrival=context['town_arrival'],
+                           date=context['date'],
+                           quantity_places=context['quantity_places'],
+                           comment=context['comment_for_booking'],
+                           telephone=context['telephone'],
+                           )

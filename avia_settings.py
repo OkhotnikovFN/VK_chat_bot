@@ -98,7 +98,9 @@ SCENARIOS = {
                 "failure_next_step": "step8"
             },
             "step9": {
-                "text": "Спасибо, ваш заказ будет обработан, с вами свяжутся по номеру {telephone}.",
+                "text": "Спасибо, ваш заказ будет обработан, с вами свяжутся по номеру {telephone}. "
+                        "Подтверждение бронирования отправлено вам в приложении к письму",
+                "image": "handler_generate_ticket",
                 "failure_text": None,
                 "handler": None,
                 "next_step": None,
